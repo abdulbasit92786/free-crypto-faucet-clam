@@ -35,26 +35,23 @@ button:disabled { background:#ccc; cursor:not-allowed;}
 <div class="container">
 <h1>💎 DogeDrip Faucet Dashboard</h1>
 
+<!-- Live Transactions -->
 <div class="live-transactions">
   <marquee id="transaction-marquee" behavior="scroll" direction="left"></marquee>
 </div>
 
+<!-- Dashboard -->
 <div class="dashboard">
   <div class="balance">Your Balance: <span id="balance">0.00 DOGE</span></div>
 
+  <!-- Deposit -->
   <div class="deposit">
-    Deposit Amount ($1 - $100):
-    <select id="deposit-amount">
-      <option value="1">1</option>
-      <option value="5">5</option>
-      <option value="10">10</option>
-      <option value="25">25</option>
-      <option value="50">50</option>
-      <option value="100">100</option>
-    </select>
+    Deposit Amount ($):
+    <input type="number" id="deposit-amount" placeholder="Enter deposit amount">
     <button onclick="deposit()" id="deposit-btn">Deposit</button>
   </div>
 
+  <!-- Withdraw -->
   <div class="withdraw">
     Withdraw DOGE to FaucetPay Address:
     <input type="text" id="withdraw-address" placeholder="FaucetPay DOGE address">
@@ -62,9 +59,11 @@ button:disabled { background:#ccc; cursor:not-allowed;}
   </div>
 </div>
 
+<!-- Ads -->
 <div class="ads-section" id="ad-top">Advertisement Top</div>
 <div class="ads-section" id="ad-middle">Advertisement Middle</div>
 
+<!-- Claim Section -->
 <div class="claim-section">
   <div id="timer">30</div> sec until claim
   <button id="claim-btn" onclick="claimReward()">Claim DOGE</button>
@@ -72,9 +71,9 @@ button:disabled { background:#ccc; cursor:not-allowed;}
 </div>
 
 <script>
+// User balance & transactions
 let userBalance = 0;
 let claimCooldown = false;
-let lastDepositTime = 0;
 let transactions = [];
 let marquee = document.getElementById("transaction-marquee");
 let index = 0;
@@ -82,14 +81,12 @@ let index = 0;
 // Get user email from login
 let currentUser = localStorage.getItem("user_email") || "user@example.com";
 
-// Initial dummy transactions
-transactions.push(`${currentUser} deposited 1 DOGE`);
-transactions.push(`${currentUser} withdrew 0.5 DOGE`);
-
 // Update scrolling transactions
 setInterval(()=>{
-  marquee.innerHTML = transactions[index];
-  index = (index + 1) % transactions.length;
+  if(transactions.length > 0){
+    marquee.innerHTML = transactions[index];
+    index = (index + 1) % transactions.length;
+  }
 }, 3000);
 
 // Mask email helper
@@ -98,25 +95,23 @@ function maskEmail(email){
   return email.slice(0,3) + "***" + email.slice(-2);
 }
 
-// Deposit
+// Deposit function
 function deposit(){
-  let amt = parseInt(document.getElementById("deposit-amount").value);
-  let now = new Date().getTime();
-  if(now - lastDepositTime < 60*60*1000){
-    alert("Deposit allowed once per hour!");
+  let amt = parseFloat(document.getElementById("deposit-amount").value);
+  if(!amt || amt <= 0){
+    alert("Enter a valid deposit amount!");
     return;
   }
   userBalance += amt;
-  lastDepositTime = now;
   document.getElementById("balance").innerText = userBalance.toFixed(2) + " DOGE";
   transactions.push(`${maskEmail(currentUser)} deposited ${amt} DOGE`);
 }
 
-// Withdraw
+// Withdraw function
 function withdraw(){
   let addr = document.getElementById("withdraw-address").value;
   if(!addr){ alert("Enter FaucetPay address"); return; }
-  if(userBalance <=0){ alert("No balance to withdraw"); return; }
+  if(userBalance <= 0){ alert("No balance to withdraw"); return; }
   transactions.push(`${maskEmail(currentUser)} withdrew ${userBalance.toFixed(2)} DOGE`);
   userBalance = 0;
   document.getElementById("balance").innerText = userBalance.toFixed(2) + " DOGE";
@@ -147,12 +142,15 @@ function claimReward(){
   transactions.push(`${maskEmail(currentUser)} claimed ${reward} DOGE`);
 
   claimCooldown = true;
-  setTimeout(()=>{ claimCooldown = false; document.getElementById("claim-btn").disabled = false; }, 15*60*1000);
+  setTimeout(()=>{
+    claimCooldown = false;
+    document.getElementById("claim-btn").disabled = false;
+  }, 15*60*1000);
 
   startAdTimer();
 }
 
-// Auto logout every 15 min (simulation)
+// Auto logout every 15 min
 setTimeout(()=>{
   alert("Session expired, please reload to log in again.");
   location.reload();
