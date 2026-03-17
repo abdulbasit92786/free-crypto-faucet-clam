@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<title>Free Crypto Faucet</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align:center; margin:20px; }
+  #claim-btn { padding: 10px 20px; font-size: 16px; cursor:pointer; }
+  #claim-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+  .ad-slot { margin: 20px 0; border:1px solid #ddd; padding:10px; min-height:100px; background:#f9f9f9;}
+</style>
+</head>
+<body>
 
+<h2>Free Crypto Faucet</h2>
+
+<!-- Header Ad -->
+<div class="ad-slot" id="header-ad">
+  <!-- A-Ads / Coinzilla code here -->
+  <p>Header Ad Slot</p>
+</div>
+
+<!-- Inline Ad (above claim) -->
+<div class="ad-slot" id="inline-ad">
+  <!-- A-Ads / Coinzilla code here -->
+  <p>Inline Ad Slot</p>
+</div>
+
+<!-- Timer -->
+<p id="timer">براہ کرم 30 سیکنڈ انتظار کریں...</p>
+
+<!-- Claim button -->
+<button id="claim-btn" disabled>Claim Reward</button>
+
+<!-- Footer Ad -->
+<div class="ad-slot" id="footer-ad">
+  <!-- A-Ads / Coinzilla code here -->
+  <p>Footer Ad Slot</p>
+</div>
+
+<!-- Referral placeholder -->
+<p>Referral Link: <span id="ref-link">[آپ کا referral link یہاں]</span></p>
+
+<script>
+let timer = 30;
+const claimBtn = document.getElementById('claim-btn');
+const timerDisplay = document.getElementById('timer');
+
+const interval = setInterval(() => {
+  timer--;
+  timerDisplay.innerText = `براہ کرم ${timer} سیکنڈ انتظار کریں...`;
+  if(timer <= 0){
+    clearInterval(interval);
+    claimBtn.disabled = false;
+    timerDisplay.innerText = 'آپ اب کلِم کر سکتے ہیں!';
+  }
+}, 1000);
+
+claimBtn.addEventListener('click', () => {
+  // Placeholder for FaucetPay API call
+  alert('Claim successful! (API integration required)');
+});
+</script>
+
+</body>
+</html>
