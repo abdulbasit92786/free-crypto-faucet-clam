@@ -5,98 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DogeDrip Faucet Dashboard</title>
 <style>
-  /* Body & container */
-  body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #ffd700, #b8860b); /* Gold gradient */
-    color: #222;
-    margin: 0;
-    padding: 0;
-  }
-  .container {
-    max-width: 700px;
-    margin: 30px auto;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.3);
-  }
-  h1 {
-    text-align: center;
-    color: #b8860b;
-    text-shadow: 2px 2px 5px #000;
-  }
-
-  /* Live transaction line */
-  .live-transactions {
-    background: #222;
-    color: #ffd700;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    height: 25px;
-  }
-  marquee {
-    font-weight: bold;
-    font-size: 14px;
-  }
-
-  /* Dashboard sections */
-  .dashboard div {
-    margin-bottom: 15px;
-  }
-  input, select, button {
-    padding: 10px;
-    margin: 5px 0;
-    width: 100%;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-  }
-  button {
-    background: linear-gradient(to right, #ffd700, #b8860b);
-    color: #222;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px #000;
-  }
-  button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
-
-  /* Ads sections */
-  .ads-section {
-    background: #f2f2f2;
-    padding: 15px;
-    margin: 15px 0;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: inset 0 0 5px #aaa;
-  }
-
-  /* Claim section */
-  .claim-section {
-    margin-top: 20px;
-    text-align: center;
-  }
-  #timer {
-    font-weight: bold;
-    color: #b8860b;
-    font-size: 20px;
-  }
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #ffd700, #b8860b);
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.3);
+}
+h1 { text-align:center; color:#b8860b; text-shadow: 2px 2px 5px #000;}
+.live-transactions { background:#222; color:#ffd700; padding:10px; border-radius:10px; margin-bottom:20px; overflow:hidden; height:25px;}
+marquee { font-weight:bold; font-size:14px;}
+.dashboard div { margin-bottom:15px;}
+input, select, button { padding:10px; margin:5px 0; width:100%; border-radius:10px; border:1px solid #ccc;}
+button { background: linear-gradient(to right, #ffd700, #b8860b); color:#222; font-weight:bold; cursor:pointer; box-shadow:2px 2px 5px #000;}
+button:disabled { background:#ccc; cursor:not-allowed;}
+.ads-section { background:#f2f2f2; padding:15px; margin:15px 0; border-radius:15px; text-align:center; box-shadow: inset 0 0 5px #aaa;}
+.claim-section { margin-top:20px; text-align:center;}
+#timer { font-weight:bold; color:#b8860b; font-size:20px;}
 </style>
 </head>
 <body>
 <div class="container">
 <h1>💎 DogeDrip Faucet Dashboard</h1>
 
-<!-- Live Transactions -->
 <div class="live-transactions">
   <marquee id="transaction-marquee" behavior="scroll" direction="left"></marquee>
 </div>
 
-<!-- Balance / Deposit / Withdraw -->
 <div class="dashboard">
   <div class="balance">Your Balance: <span id="balance">0.00 DOGE</span></div>
 
@@ -117,37 +59,34 @@
     Withdraw DOGE to FaucetPay Address:
     <input type="text" id="withdraw-address" placeholder="FaucetPay DOGE address">
     <button onclick="withdraw()" id="withdraw-btn">Withdraw</button>
-    <!-- reCAPTCHA placeholder -->
-    <div id="withdraw-recaptcha"></div>
   </div>
 </div>
 
-<!-- Ads -->
 <div class="ads-section" id="ad-top">Advertisement Top</div>
 <div class="ads-section" id="ad-middle">Advertisement Middle</div>
 
-<!-- Claim -->
 <div class="claim-section">
   <div id="timer">30</div> sec until claim
   <button id="claim-btn" onclick="claimReward()">Claim DOGE</button>
   <div class="ads-section" id="ad-claim">Advertisement Before Claim</div>
-  <!-- reCAPTCHA placeholder -->
-  <div id="claim-recaptcha"></div>
 </div>
 
 <script>
 let userBalance = 0;
 let claimCooldown = false;
 let lastDepositTime = 0;
-let transactions = [
-  "ali***@gmail.com deposited 1 DOGE",
-  "***@yahoo.com withdrew 0.5 DOGE",
-  "sam***@mail.com deposited 2 DOGE"
-];
+let transactions = [];
 let marquee = document.getElementById("transaction-marquee");
 let index = 0;
 
-// Update scrolling transaction line
+// Get user email from login
+let currentUser = localStorage.getItem("user_email") || "user@example.com";
+
+// Initial dummy transactions
+transactions.push(`${currentUser} deposited 1 DOGE`);
+transactions.push(`${currentUser} withdrew 0.5 DOGE`);
+
+// Update scrolling transactions
 setInterval(()=>{
   marquee.innerHTML = transactions[index];
   index = (index + 1) % transactions.length;
@@ -159,31 +98,31 @@ function maskEmail(email){
   return email.slice(0,3) + "***" + email.slice(-2);
 }
 
-// DEPOSIT
+// Deposit
 function deposit(){
   let amt = parseInt(document.getElementById("deposit-amount").value);
   let now = new Date().getTime();
-  if(now - lastDepositTime < 60*60*1000){ // 1 hour cooldown
+  if(now - lastDepositTime < 60*60*1000){
     alert("Deposit allowed once per hour!");
     return;
   }
   userBalance += amt;
   lastDepositTime = now;
   document.getElementById("balance").innerText = userBalance.toFixed(2) + " DOGE";
-  transactions.push(`${maskEmail("user@example.com")} deposited ${amt} DOGE`);
+  transactions.push(`${maskEmail(currentUser)} deposited ${amt} DOGE`);
 }
 
-// WITHDRAW
+// Withdraw
 function withdraw(){
   let addr = document.getElementById("withdraw-address").value;
   if(!addr){ alert("Enter FaucetPay address"); return; }
-  if(userBalance <= 0){ alert("No balance to withdraw"); return; }
-  transactions.push(`${maskEmail("user@example.com")} withdrew ${userBalance.toFixed(2)} DOGE`);
+  if(userBalance <=0){ alert("No balance to withdraw"); return; }
+  transactions.push(`${maskEmail(currentUser)} withdrew ${userBalance.toFixed(2)} DOGE`);
   userBalance = 0;
   document.getElementById("balance").innerText = userBalance.toFixed(2) + " DOGE";
 }
 
-// CLAIM + 30 sec ad + 15 min cooldown
+// Claim + 30 sec ad + 15 min cooldown
 function startAdTimer(){
   let time = 30;
   let timerEl = document.getElementById("timer");
@@ -205,7 +144,7 @@ function claimReward(){
   let reward = 0.01;
   userBalance += reward;
   document.getElementById("balance").innerText = userBalance.toFixed(2) + " DOGE";
-  transactions.push(`${maskEmail("user@example.com")} claimed ${reward} DOGE`);
+  transactions.push(`${maskEmail(currentUser)} claimed ${reward} DOGE`);
 
   claimCooldown = true;
   setTimeout(()=>{ claimCooldown = false; document.getElementById("claim-btn").disabled = false; }, 15*60*1000);
@@ -213,15 +152,14 @@ function claimReward(){
   startAdTimer();
 }
 
-// Auto logout every 15 min (for simulation)
+// Auto logout every 15 min (simulation)
 setTimeout(()=>{
   alert("Session expired, please reload to log in again.");
   location.reload();
 }, 15*60*1000);
 
-// Start first ad timer
+// Start initial ad timer
 startAdTimer();
 </script>
-
 </body>
 </html>
