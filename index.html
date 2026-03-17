@@ -1,164 +1,144 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Crypto Faucet Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doge Faucet</title>
+
 <style>
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(145deg, #1e1e1e, #3a3a3a);
-    color: #fff;
-}
-.container {
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 20px;
-    background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
-    border-radius: 20px;
-    box-shadow: 5px 5px 15px #000, -5px -5px 15px #444;
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
 }
 
-/* Top Balance Section */
-.balance-section {
-    text-align: center;
-    margin-bottom: 20px;
+/* Header */
+.header {
+    text-align:center;
+    padding:40px 20px;
+    color:#fff;
 }
-.balance-section h2 {
-    font-size: 28px;
-    color: gold;
-    text-shadow: 0 0 10px #ffd700;
-}
-
-/* Buttons */
-.buttons {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-}
-button {
-    padding: 15px 25px;
-    font-size: 18px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    color: #fff;
-    background: linear-gradient(145deg, #ffd700, #ffaa00);
-    box-shadow: 3px 3px 8px #000, -3px -3px 8px #555;
-    transition: transform 0.2s;
-}
-button:hover {
-    transform: scale(1.05);
+.header h1 {
+    font-size:32px;
+    margin:10px 0;
 }
 
-/* Live transaction feed */
-.live-feed {
-    max-height: 200px;
-    overflow-y: auto;
-    background: rgba(255, 215, 0, 0.1);
-    padding: 10px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-}
-.live-feed p {
-    margin: 5px 0;
-    font-size: 14px;
+/* Card */
+.card {
+    background:#1e1e1e;
+    margin:-30px auto;
+    width:90%;
+    max-width:400px;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    text-align:center;
+    color:#fff;
 }
 
-/* Claim section */
-.claim-section {
-    text-align: center;
-    margin-top: 20px;
+/* List */
+.list {
+    text-align:left;
+    margin:20px 0;
 }
-#claim-btn {
-    padding: 15px 30px;
-    font-size: 20px;
-    border-radius: 15px;
-    border: none;
-    cursor: not-allowed;
-    background: linear-gradient(145deg, #444, #666);
-    color: #fff;
+.list p {
+    margin:8px 0;
 }
-#claim-btn.active {
-    cursor: pointer;
-    background: linear-gradient(145deg, #ffd700, #ffaa00);
-    box-shadow: 3px 3px 10px #000, -3px -3px 10px #555;
+
+/* Input */
+input {
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    margin:10px 0;
+    background:#333;
+    color:#fff;
+}
+
+/* Button */
+.btn {
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(90deg,#667eea,#00c6ff);
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+/* Stats */
+.stats {
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+    font-size:14px;
 }
 </style>
+
 </head>
+
 <body>
-<div class="container">
 
-    <!-- Top Balance -->
-    <div class="balance-section">
-        <h2>Your Balance: <span id="balance">0.0000 DOGE</span></h2>
+<div class="header">
+    <h1>💎 DogeDrip</h1>
+    <p>Claim Free DOGE Rewards</p>
+</div>
+
+<div class="card">
+
+    <h2>Free Doge Faucet</h2>
+
+    <div class="list">
+        <p>✅ Claim DOGE</p>
+        <p>✅ Instant FaucetPay Withdraw</p>
+        <p>✅ No Minimum Withdrawal</p>
+        <p>✅ Claim Every 15 Seconds</p>
     </div>
 
-    <!-- Buttons -->
-    <div class="buttons">
-        <button id="deposit-btn">Deposit</button>
-        <button id="withdraw-btn">Withdraw</button>
-        <button id="dashboard-btn">Dashboard</button>
+    <!-- Email -->
+    <input type="email" placeholder="Enter FaucetPay Email" id="email">
+
+    <!-- Fake Cloudflare Verification -->
+    <div style="background:#fff;color:#000;padding:10px;border-radius:10px;margin-top:10px;">
+        ✔ Verification Complete
     </div>
 
-    <!-- Live feed -->
-    <div class="live-feed" id="live-feed">
-        <p>user***@example.com deposited 0.01 DOGE</p>
-        <p>user***@mail.com withdrew 0.005 DOGE</p>
-        <p>user***@abc.com deposited 0.02 DOGE</p>
-    </div>
+    <!-- Button -->
+    <button class="btn" onclick="login()">🚀 Claim Free DOGE Now</button>
 
-    <!-- Login / Cloudflare placeholder -->
-    <div class="login-section">
-        <p>Enter your Email to Login:</p>
-        <input type="email" id="login-email" placeholder="your email">
-        <button id="login-btn">Login</button>
-        <p id="verify-msg" style="margin-top:10px;color:gold;"></p>
-    </div>
-
-    <!-- Claim Button -->
-    <div class="claim-section">
-        <p id="timer">Please wait 30 seconds...</p>
-        <button id="claim-btn">Claim</button>
+    <!-- Stats -->
+    <div class="stats">
+        <div>
+            <p>Online</p>
+            <strong>3482</strong>
+        </div>
+        <div>
+            <p>Active Today</p>
+            <strong>11405</strong>
+        </div>
     </div>
 
 </div>
 
 <script>
-// Login + verification placeholder
-document.getElementById('login-btn').addEventListener('click', function(){
-    const email = document.getElementById('login-email').value;
-    if(email.includes('@')){
-        document.getElementById('verify-msg').innerText = "Verification complete! Welcome " + email;
-        // Enable dashboard buttons
-        document.getElementById('deposit-btn').disabled = false;
-        document.getElementById('withdraw-btn').disabled = false;
-        document.getElementById('dashboard-btn').disabled = false;
-    } else {
-        document.getElementById('verify-msg').innerText = "Invalid email!";
+function login(){
+    let email = document.getElementById("email").value;
+
+    if(email === "" || !email.includes("@")){
+        alert("Enter valid email");
+        return;
     }
-});
 
-// Claim button timer
-let timer = 30;
-const claimBtn = document.getElementById('claim-btn');
-const timerDisplay = document.getElementById('timer');
+    // Save email (temporary)
+    localStorage.setItem("user_email", email);
 
-const interval = setInterval(() => {
-  timer--;
-  timerDisplay.innerText = `Please wait ${timer} seconds...`;
-  if(timer <= 0){
-    clearInterval(interval);
-    claimBtn.classList.add('active');
-    claimBtn.disabled = false;
-    timerDisplay.innerText = 'You can now claim your reward!';
-  }
-}, 1000);
-
-claimBtn.addEventListener('click', () => {
-    alert("Claim successful! (FaucetPay API integration required)");
-});
+    // Redirect (next page later)
+    alert("Login Success! Dashboard coming next...");
+}
 </script>
+
 </body>
 </html>
