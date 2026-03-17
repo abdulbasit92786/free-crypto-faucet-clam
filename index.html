@@ -2,65 +2,163 @@
 <html lang="ur">
 <head>
 <meta charset="UTF-8">
-<title>Free Crypto Faucet</title>
+<title>Crypto Faucet Dashboard</title>
 <style>
-  body { font-family: Arial, sans-serif; text-align:center; margin:20px; }
-  #claim-btn { padding: 10px 20px; font-size: 16px; cursor:pointer; }
-  #claim-btn:disabled { background-color: #ccc; cursor: not-allowed; }
-  .ad-slot { margin: 20px 0; border:1px solid #ddd; padding:10px; min-height:100px; background:#f9f9f9;}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(145deg, #1e1e1e, #3a3a3a);
+    color: #fff;
+}
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+    border-radius: 20px;
+    box-shadow: 5px 5px 15px #000, -5px -5px 15px #444;
+}
+
+/* Top Balance Section */
+.balance-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.balance-section h2 {
+    font-size: 28px;
+    color: gold;
+    text-shadow: 0 0 10px #ffd700;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+button {
+    padding: 15px 25px;
+    font-size: 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(145deg, #ffd700, #ffaa00);
+    box-shadow: 3px 3px 8px #000, -3px -3px 8px #555;
+    transition: transform 0.2s;
+}
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Live transaction feed */
+.live-feed {
+    max-height: 200px;
+    overflow-y: auto;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+.live-feed p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Claim section */
+.claim-section {
+    text-align: center;
+    margin-top: 20px;
+}
+#claim-btn {
+    padding: 15px 30px;
+    font-size: 20px;
+    border-radius: 15px;
+    border: none;
+    cursor: not-allowed;
+    background: linear-gradient(145deg, #444, #666);
+    color: #fff;
+}
+#claim-btn.active {
+    cursor: pointer;
+    background: linear-gradient(145deg, #ffd700, #ffaa00);
+    box-shadow: 3px 3px 10px #000, -3px -3px 10px #555;
+}
 </style>
 </head>
 <body>
+<div class="container">
 
-<h2>Free Crypto Faucet</h2>
+    <!-- Top Balance -->
+    <div class="balance-section">
+        <h2>Your Balance: <span id="balance">0.0000 DOGE</span></h2>
+    </div>
 
-<!-- Header Ad -->
-<div class="ad-slot" id="header-ad">
-  <!-- A-Ads / Coinzilla code here -->
-  <p>Header Ad Slot</p>
+    <!-- Buttons -->
+    <div class="buttons">
+        <button id="deposit-btn">Deposit</button>
+        <button id="withdraw-btn">Withdraw</button>
+        <button id="dashboard-btn">Dashboard</button>
+    </div>
+
+    <!-- Live feed -->
+    <div class="live-feed" id="live-feed">
+        <p>user***@example.com deposited 0.01 DOGE</p>
+        <p>user***@mail.com withdrew 0.005 DOGE</p>
+        <p>user***@abc.com deposited 0.02 DOGE</p>
+    </div>
+
+    <!-- Login / Cloudflare placeholder -->
+    <div class="login-section">
+        <p>Enter your Email to Login:</p>
+        <input type="email" id="login-email" placeholder="your email">
+        <button id="login-btn">Login</button>
+        <p id="verify-msg" style="margin-top:10px;color:gold;"></p>
+    </div>
+
+    <!-- Claim Button -->
+    <div class="claim-section">
+        <p id="timer">Please wait 30 seconds...</p>
+        <button id="claim-btn">Claim</button>
+    </div>
+
 </div>
-
-<!-- Inline Ad (above claim) -->
-<div class="ad-slot" id="inline-ad">
-  <!-- A-Ads / Coinzilla code here -->
-  <p>Inline Ad Slot</p>
-</div>
-
-<!-- Timer -->
-<p id="timer">براہ کرم 30 سیکنڈ انتظار کریں...</p>
-
-<!-- Claim button -->
-<button id="claim-btn" disabled>Claim Reward</button>
-
-<!-- Footer Ad -->
-<div class="ad-slot" id="footer-ad">
-  <!-- A-Ads / Coinzilla code here -->
-  <p>Footer Ad Slot</p>
-</div>
-
-<!-- Referral placeholder -->
-<p>Referral Link: <span id="ref-link">[آپ کا referral link یہاں]</span></p>
 
 <script>
+// Login + verification placeholder
+document.getElementById('login-btn').addEventListener('click', function(){
+    const email = document.getElementById('login-email').value;
+    if(email.includes('@')){
+        document.getElementById('verify-msg').innerText = "Verification complete! Welcome " + email;
+        // Enable dashboard buttons
+        document.getElementById('deposit-btn').disabled = false;
+        document.getElementById('withdraw-btn').disabled = false;
+        document.getElementById('dashboard-btn').disabled = false;
+    } else {
+        document.getElementById('verify-msg').innerText = "Invalid email!";
+    }
+});
+
+// Claim button timer
 let timer = 30;
 const claimBtn = document.getElementById('claim-btn');
 const timerDisplay = document.getElementById('timer');
 
 const interval = setInterval(() => {
   timer--;
-  timerDisplay.innerText = `براہ کرم ${timer} سیکنڈ انتظار کریں...`;
+  timerDisplay.innerText = `Please wait ${timer} seconds...`;
   if(timer <= 0){
     clearInterval(interval);
+    claimBtn.classList.add('active');
     claimBtn.disabled = false;
-    timerDisplay.innerText = 'آپ اب کلِم کر سکتے ہیں!';
+    timerDisplay.innerText = 'You can now claim your reward!';
   }
 }, 1000);
 
 claimBtn.addEventListener('click', () => {
-  // Placeholder for FaucetPay API call
-  alert('Claim successful! (API integration required)');
+    alert("Claim successful! (FaucetPay API integration required)");
 });
 </script>
-
 </body>
 </html>
