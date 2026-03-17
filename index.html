@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Doge Faucet</title>
 
+<!-- Google reCAPTCHA -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <style>
 body {
     margin:0;
@@ -20,7 +23,6 @@ body {
 }
 .header h1 {
     font-size:32px;
-    margin:10px 0;
 }
 
 /* Card */
@@ -66,15 +68,11 @@ input {
     color:#fff;
     font-size:16px;
     cursor:pointer;
-    margin-top:10px;
+    margin-top:15px;
 }
 
-/* Stats */
-.stats {
-    display:flex;
-    justify-content:space-between;
-    margin-top:20px;
-    font-size:14px;
+.btn:hover {
+    opacity:0.9;
 }
 </style>
 
@@ -99,44 +97,38 @@ input {
     </div>
 
     <!-- Email -->
-    <input type="email" placeholder="Enter FaucetPay Email" id="email">
+    <input type="email" id="email" placeholder="Enter FaucetPay Email">
 
-    <!-- Fake Cloudflare Verification -->
-    <div style="background:#fff;color:#000;padding:10px;border-radius:10px;margin-top:10px;">
-        ✔ Verification Complete
-    </div>
+    <!-- REAL reCAPTCHA -->
+    <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>
 
     <!-- Button -->
     <button class="btn" onclick="login()">🚀 Claim Free DOGE Now</button>
-
-    <!-- Stats -->
-    <div class="stats">
-        <div>
-            <p>Online</p>
-            <strong>3482</strong>
-        </div>
-        <div>
-            <p>Active Today</p>
-            <strong>11405</strong>
-        </div>
-    </div>
 
 </div>
 
 <script>
 function login(){
     let email = document.getElementById("email").value;
+    let recaptcha = grecaptcha.getResponse();
 
     if(email === "" || !email.includes("@")){
-        alert("Enter valid email");
+        alert("Please enter valid email");
         return;
     }
 
-    // Save email (temporary)
+    if(recaptcha.length === 0){
+        alert("Please verify you are not a robot");
+        return;
+    }
+
+    // Save email
     localStorage.setItem("user_email", email);
 
-    // Redirect (next page later)
-    alert("Login Success! Dashboard coming next...");
+    alert("Login Successful!");
+
+    // Next page redirect (later)
+    // window.location.href = "dashboard.html";
 }
 </script>
 
