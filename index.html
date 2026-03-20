@@ -74,15 +74,37 @@ input {
 .btn:hover {
     opacity:0.9;
 }
+
+/* Ad styling */
+.ad-box {
+    margin: 20px auto;
+    text-align:center;
+}
 </style>
 
 </head>
 
 <body>
 
+<!-- 🔝 TOP AD -->
+<div class="ad-box">
+<div style="width: 240px;margin: auto;">
+<iframe data-aa='2431146' src='//ad.a-ads.com/2431146/?size=240x400'
+style='border:0; padding:0; width:240px; height:400px; overflow:hidden;'></iframe>
+</div>
+</div>
+
 <div class="header">
     <h1>💎 DogeDrip</h1>
     <p>Claim Free DOGE Rewards</p>
+</div>
+
+<!-- 🔥 MIDDLE AD -->
+<div class="ad-box">
+<div style="width: 240px;margin: auto;">
+<iframe data-aa='2431146' src='//ad.a-ads.com/2431146/?size=240x400'
+style='border:0; padding:0; width:240px; height:400px; overflow:hidden;'></iframe>
+</div>
 </div>
 
 <div class="card">
@@ -107,6 +129,14 @@ input {
 
 </div>
 
+<!-- 🔻 BOTTOM AD -->
+<div class="ad-box">
+<div style="width: 240px;margin: auto;">
+<iframe data-aa='2431146' src='//ad.a-ads.com/2431146/?size=240x400'
+style='border:0; padding:0; width:240px; height:400px; overflow:hidden;'></iframe>
+</div>
+</div>
+
 <script>
 function login(){
     let email = document.getElementById("email").value;
@@ -122,13 +152,11 @@ function login(){
         return;
     }
 
-    // Save email
     localStorage.setItem("user_email", email);
 
     alert("Login Successful!");
 
-    // Next page redirect (later)
-     window.location.href = "dashboard.html";
+    window.location.href = "dashboard.html";
 }
 </script>
 
